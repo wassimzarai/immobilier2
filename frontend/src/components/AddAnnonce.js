@@ -341,7 +341,67 @@ const AddAnnonce = () => {
               <label htmlFor="sallesDeBains">Nombre de salles de bains</label>
               <input type="number" id="sallesDeBains" name="sallesDeBains" value={formData.sallesDeBains} onChange={onChange} min="0" />
             </div>
-            {/* Ajoutez ici d'autres champs selon votre modèle, y compris les cases à cocher pour les caractéristiques, etc. */}
+            <h3>Caractéristiques</h3>
+<div className="form-group checkbox-group">
+  {Object.keys(formData.caracteristiques).map(key => (
+    <label key={key} style={{marginRight: '15px'}}>
+      <input
+        type="checkbox"
+        name={`caracteristiques.${key}`}
+        checked={formData.caracteristiques[key]}
+        onChange={e => setFormData(prev => ({
+          ...prev,
+          caracteristiques: {
+            ...prev.caracteristiques,
+            [key]: e.target.checked
+          }
+        }))}
+      /> {key}
+    </label>
+  ))}
+</div>
+<div className="form-group">
+  <label htmlFor="facadeExterieure">Façade extérieure</label>
+  <input type="text" id="facadeExterieure" name="facadeExterieure" value={formData.facadeExterieure} onChange={onChange} />
+</div>
+<h3>Intérieur</h3>
+<div className="form-group checkbox-group">
+  {Object.keys(formData.interieur).map(key => (
+    <label key={key} style={{marginRight: '15px'}}>
+      <input
+        type="checkbox"
+        name={`interieur.${key}`}
+        checked={formData.interieur[key]}
+        onChange={e => setFormData(prev => ({
+          ...prev,
+          interieur: {
+            ...prev.interieur,
+            [key]: e.target.checked
+          }
+        }))}
+      /> {key}
+    </label>
+  ))}
+</div>
+<h3>Options supplémentaires</h3>
+<div className="form-group checkbox-group">
+  {Object.keys(formData.optionsSupplementaires).map(key => (
+    <label key={key} style={{marginRight: '15px'}}>
+      <input
+        type="checkbox"
+        name={`optionsSupplementaires.${key}`}
+        checked={formData.optionsSupplementaires[key]}
+        onChange={e => setFormData(prev => ({
+          ...prev,
+          optionsSupplementaires: {
+            ...prev.optionsSupplementaires,
+            [key]: e.target.checked
+          }
+        }))}
+      /> {key}
+    </label>
+  ))}
+</div>
             <button type="button" className="auth-button" onClick={() => setStep(1)}>
               Précédent
             </button>
