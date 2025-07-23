@@ -1,0 +1,6 @@
+.annonce-detail-container { max-width: 800px; margin: auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.annonce-detail-header { border-bottom: 2px solid #007bff; padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+.annonce-detail-header h1 { margin: 0; }
+.annonce-detail-prix { font-size: 1.8rem; font-weight: bold; color: #007bff; }
+.annonce-detail-body p { line-height: 1.7; }
+.annonce-detail-body hr { border: 0; border-top: 1px solid #eee; margin: 2rem 0; }

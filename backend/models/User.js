@@ -1,0 +1,63 @@
+// =================================================================
+// FICHIER : backend/models/User.js
+// VERSION COMPLÈTE ET CORRIGÉE
+// =================================================================
+
+const mongoose = require('mongoose');
+
+// On définit la structure (le "schéma") de nos utilisateurs dans la base de données.
+const userSchema = new mongoose.Schema({
+  // Le nom de l'utilisateur, de type String.
+  nom: {
+    type: String,
+    required: true // Ce champ est obligatoire.
+  },
+  
+  // L'e-mail de l'utilisateur.
+  email: {
+    type: String,
+    required: true, // Obligatoire.
+    unique: true,   // Doit être unique, pas deux utilisateurs avec le même e-mail.
+    lowercase: true // Est toujours sauvegardé en minuscules pour éviter les doublons.
+  },
+  
+  // Le mot de passe de l'utilisateur.
+  password: {
+    type: String,
+    required: true // Obligatoire.
+  },
+  
+  // Indique si le compte a été activé par e-mail.
+  isActive: {
+    type: Boolean,
+    default: false // Par défaut, un nouveau compte n'est pas actif.
+  },
+  
+  // Le code envoyé par e-mail pour activer le compte.
+  activationCode: {
+    type: String
+  },
+
+  // --- DÉBUT DE L'AJOUT POUR "MOT DE PASSE OUBLIÉ" ---
+  
+  // Le code secret temporaire pour réinitialiser le mot de passe.
+  resetPasswordToken: {
+    type: String
+  },
+  
+  // La date et l'heure auxquelles ce code secret expirera.
+  resetPasswordExpires: {
+    type: Date
+  }
+  
+  // --- FIN DE L'AJOUT ---
+
+}, {
+  // Cette option ajoute automatiquement deux champs à chaque document :
+  // `createdAt` (la date de création) et `updatedAt` (la date de la dernière modification).
+  timestamps: true 
+});
+
+// On exporte le modèle pour pouvoir l'utiliser dans d'autres fichiers (comme auth.js).
+// Mongoose créera une collection nommée "users" (au pluriel et en minuscules) dans MongoDB.
+module.exports = mongoose.model('User', userSchema);
