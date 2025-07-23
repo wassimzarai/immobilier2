@@ -50,13 +50,44 @@ const AnnonceDetail = () => {
       <div className="annonce-detail-body">
         <p><strong>Catégorie :</strong> {annonce.categorie}</p>
         <p><strong>État du bien :</strong> {annonce.etat}</p>
-        <p><strong>Adresse :</strong> {annonce.emplacement.adresse}, {annonce.emplacement.ville}, {annonce.emplacement.region}</p>
+        <p><strong>Adresse :</strong> {annonce.emplacement?.adresse}, {annonce.emplacement?.ville}, {annonce.emplacement?.region}</p>
         <hr />
         <h3>Description</h3>
         <p>{annonce.description}</p>
         <hr />
+        <h3>Détails du bien</h3>
+        <ul>
+          <li><strong>Surface construite :</strong> {annonce.surfaceConstruite || '-'} m²</li>
+          <li><strong>Année de construction :</strong> {annonce.annees || '-'}</li>
+          <li><strong>Type de sol :</strong> {annonce.typeSol || '-'}</li>
+          <li><strong>Étage :</strong> {annonce.etage || '-'}</li>
+          <li><strong>Orientation :</strong> {annonce.orientation || '-'}</li>
+          <li><strong>Nombre de pièces :</strong> {annonce.pieces || '-'}</li>
+          <li><strong>Nombre de chambres :</strong> {annonce.chambres || '-'}</li>
+          <li><strong>Nombre de salles de bains :</strong> {annonce.sallesDeBains || '-'}</li>
+          <li><strong>Façade extérieure :</strong> {annonce.facadeExterieure || '-'}</li>
+        </ul>
+        <h3>Caractéristiques</h3>
+        <ul>
+          {annonce.caracteristiques && Object.entries(annonce.caracteristiques).map(([key, value]) => (
+            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
+          ))}
+        </ul>
+        <h3>Intérieur</h3>
+        <ul>
+          {annonce.interieur && Object.entries(annonce.interieur).map(([key, value]) => (
+            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
+          ))}
+        </ul>
+        <h3>Options supplémentaires</h3>
+        <ul>
+          {annonce.optionsSupplementaires && Object.entries(annonce.optionsSupplementaires).map(([key, value]) => (
+            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
+          ))}
+        </ul>
+        <hr />
         <p><strong>Publié par :</strong> {annonce.auteur?.nom || 'Utilisateur'}</p>
-        <p><strong>Date de publication :</strong> {new Date(annonce.createdAt).toLocaleDateString('fr-FR')}</p>
+        <p><strong>Date de publication :</strong> {annonce.createdAt ? new Date(annonce.createdAt).toLocaleDateString('fr-FR') : '-'}</p>
       </div>
     </div>
   );
