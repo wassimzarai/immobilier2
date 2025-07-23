@@ -69,21 +69,33 @@ const AnnonceDetail = () => {
         </ul>
         <h3>Caractéristiques</h3>
         <ul>
-          {annonce.caracteristiques && Object.entries(annonce.caracteristiques).map(([key, value]) => (
-            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
-          ))}
+          {annonce.caracteristiques && Object.entries(annonce.caracteristiques).filter(([_, value]) => value).length > 0 ? (
+            Object.entries(annonce.caracteristiques).filter(([_, value]) => value).map(([key]) => (
+              <li key={key}><strong>{key}</strong></li>
+            ))
+          ) : (
+            <li>Aucune</li>
+          )}
         </ul>
         <h3>Intérieur</h3>
         <ul>
-          {annonce.interieur && Object.entries(annonce.interieur).map(([key, value]) => (
-            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
-          ))}
+          {annonce.interieur && Object.entries(annonce.interieur).filter(([_, value]) => value).length > 0 ? (
+            Object.entries(annonce.interieur).filter(([_, value]) => value).map(([key]) => (
+              <li key={key}><strong>{key}</strong></li>
+            ))
+          ) : (
+            <li>Aucune</li>
+          )}
         </ul>
         <h3>Options supplémentaires</h3>
         <ul>
-          {annonce.optionsSupplementaires && Object.entries(annonce.optionsSupplementaires).map(([key, value]) => (
-            <li key={key}><strong>{key} :</strong> {value ? 'Oui' : 'Non'}</li>
-          ))}
+          {annonce.optionsSupplementaires && Object.entries(annonce.optionsSupplementaires).filter(([_, value]) => value).length > 0 ? (
+            Object.entries(annonce.optionsSupplementaires).filter(([_, value]) => value).map(([key]) => (
+              <li key={key}><strong>{key}</strong></li>
+            ))
+          ) : (
+            <li>Aucune</li>
+          )}
         </ul>
         <hr />
         <p><strong>Publié par :</strong> {annonce.auteur?.nom || 'Utilisateur'}</p>
