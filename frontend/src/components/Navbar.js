@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth'; // Assurez-vous que ce chemin est correct
@@ -7,7 +6,7 @@ import './Navbar.css';
 
 const Navbar = () => {
   // La logique du hook useAuth est maintenant plus simple
-  const { isLoggedIn, isAdmin, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   // La fonction de déconnexion est maintenant fournie par le hook
@@ -21,58 +20,26 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Le logo redirige toujours vers la page d'accueil principale */}
         <Link to="/" className="navbar-logo">
-          MonApp
+          <span style={{ color: '#00C58E', fontWeight: 'bold', fontSize: 26 }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#FFD166" style={{verticalAlign: 'middle', marginRight: 8}}>
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            Aqarino
+          </span>
         </Link>
-
-        {/* La liste des liens de navigation */}
         <ul className="nav-menu">
-          
-          {/* --- DÉBUT DE LA NOUVELLE LOGIQUE D'AFFICHAGE --- */}
-
-          {/* Si l'utilisateur est connecté... */}
-          {isLoggedIn ? (
-            <>
-              {/* ...on affiche le bouton "Publier une annonce" */}
-              <li className="nav-item">
-                <Link to="/annonces/ajouter" className="nav-links-button">
-                  Publier une annonce
-                </Link>
-              </li>
-
-              {/* Si l'utilisateur est aussi un admin, on affiche le lien du dashboard */}
-              {isAdmin && (
-                <li className="nav-item">
-                  <Link to="/admin/dashboard" className="nav-links">
-                    Dashboard Admin
-                  </Link>
-                </li>
-              )}
-
-              {/* Et on affiche le bouton de déconnexion */}
-              <li className="nav-item">
-                <button onClick={handleLogout} className="nav-links-logout">
-                  Déconnexion
-                </button>
-              </li>
-            </>
-          ) : (
-            // --- Si l'utilisateur N'EST PAS connecté... ---
-            <>
-              {/* ...on affiche les liens pour s'inscrire et se connecter */}
-              <li className="nav-item">
-                <Link to="/register" className="nav-links">
-                  S'inscrire
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/login" className="nav-links">
-                  Se Connecter
-                </Link>
-              </li>
-            </>
-          )}
-          
-          {/* --- FIN DE LA NOUVELLE LOGIQUE D'AFFICHAGE --- */}
+          <li className="nav-item">
+            <Link to="/annonces?type=vente" className="nav-links nav-btn-buy">Acheter</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/annonces?type=location" className="nav-links nav-btn-rent">Louer</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/annonces/ajouter" className="nav-links-button nav-btn-publish">Publier une annonce</Link>
+          </li>
+          <li className="nav-item">
+            <button onClick={handleLogout} className="nav-links-logout nav-btn-logout">Déconnexion</button>
+          </li>
         </ul>
       </div>
     </nav>

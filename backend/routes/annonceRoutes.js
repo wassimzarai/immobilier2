@@ -62,7 +62,20 @@ const regionsData = {
 router.get('/regions', (req, res) => { try { res.json(Object.keys(regionsData)); } catch (e) { res.sendStatus(500); } });
 router.get('/regions/:region/villes', (req, res) => { try { const d = regionsData[req.params.region]; d ? res.json(d.villes) : res.sendStatus(404); } catch (e) { res.sendStatus(500); } });
 router.get('/regions/:region/details', (req, res) => { try { const d = regionsData[req.params.region]; d ? res.json({ lat: d.lat, lon: d.lon }) : res.sendStatus(404); } catch (e) { res.sendStatus(500); } });
-router.get('/', async (req, res) => { try { const annonces = await Annonce.find({ estPubliee: true }).populate('auteur', 'nom').sort({ createdAt: -1 }); res.json(annonces); } catch (e) { res.sendStatus(500); } });
+// --- FILTRE PRIX MIN/MAX ---
+router.get('/', async (req, res) => {
+  try {
+    const { prixMin, prixMax, ...autres } = req.query;
+    let filtre = { estPubliee: true };
+    if (prixMin) filtre.prix = { ...filtre.prix, $gte: Number(prixMin) };
+    if (prixMax) filtre.prix = { ...filtre.prix, $lte: Number(prixMax) };
+    // On peut ajouter d'autres filtres ici (categorie, typeBien, etc.)
+    const annonces = await Annonce.find(filtre).populate('auteur', 'nom').sort({ createdAt: -1 });
+    res.json(annonces);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 router.get('/:id', async (req, res) => { try { const annonce = await Annonce.findById(req.params.id).populate('auteur', 'nom email'); if (!annonce) return res.sendStatus(404); res.json(annonce); } catch (e) { res.sendStatus(500); } });
 
 // --- ROUTES PROTÉGÉES ---

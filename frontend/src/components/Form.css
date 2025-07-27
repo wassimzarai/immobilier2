@@ -1,219 +1,251 @@
 .form-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(44,44,44,0.10);
+  font-family: 'Poppins', 'Inter', 'Cairo', 'Tajawal', 'Almarai', sans-serif;
+}
+
+.form-container h2 {
+  color: #333333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.form-container h3 {
+  color: #8BC34A;
+  margin: 25px 0 15px 0;
+  border-bottom: 2px solid #F7DC6F;
+  padding-bottom: 5px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid #8BC34A;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #F5F6FA;
+  color: #333333;
+  transition: border-color 0.2s;
+  margin-bottom: 6px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #F7DC6F;
+  box-shadow: 0 0 0 2px rgba(247,220,111,0.11);
+}
+
+.form-group select:disabled {
+  background-color: #F5F6FA;
+  color: #B0B0B0;
+  cursor: not-allowed;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.form-help {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.coordinates-display {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #F5F6FA;
+  border-radius: 4px;
+  border-left: 4px solid #8BC34A;
+}
+
+.coordinates-display small {
+  color: #495057;
+  font-family: monospace;
+}
+
+.auth-button {
+  background-color: #8BC34A;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 36px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px rgba(139,195,74,0.09);
+  margin-top: 18px;
+}
+
+.auth-button:hover:not(:disabled) {
+  background-color: #F7DC6F;
+  color: #333333;
+  box-shadow: 0 4px 15px rgba(247,220,111,0.12);
+}
+
+.auth-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.message {
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.message.success {
+  background-color: #D4EDDA;
+  color: #8BC34A;
+  border: 1px solid #8BC34A;
+}
+
+.message.error {
+  background-color: #F8D7DA;
+  color: #F7DC6F;
+  border: 1px solid #F7DC6F;
+}
+
+.message.info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* Styles pour la carte Leaflet */
+.leaflet-container {
+  border-radius: 4px;
+}
+
+.leaflet-popup-content {
+  font-family: inherit;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .form-container {
+    margin: 10px;
+    padding: 15px;
   }
-  
-  .form-container h2 {
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .form-container h3 {
-    color: #555;
-    margin: 25px 0 15px 0;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #333;
-  }
-  
   .form-group input,
   .form-group select,
   .form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     font-size: 16px;
-    transition: border-color 0.3s ease;
   }
-  
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
-  
-  .form-group select:disabled {
-    background-color: #f8f9fa;
-    color: #6c757d;
-    cursor: not-allowed;
-  }
-  
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  .form-group small {
-    display: block;
-    margin-top: 5px;
-    color: #6c757d;
-    font-size: 14px;
-  }
-  
-  .form-help {
-    font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-  
-  .coordinates-display {
-    margin-top: 10px;
-    padding: 8px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    border-left: 4px solid #007bff;
-  }
-  
-  .coordinates-display small {
-    color: #495057;
-    font-family: monospace;
-  }
-  
-  .auth-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-  }
-  
-  .auth-button:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-  
-  .auth-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-  
-  .message {
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-weight: 500;
-  }
-  
-  .message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-  }
-  
-  .message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-  }
-  
-  .message.info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-  }
-  
-  /* Styles pour la carte Leaflet */
-  .leaflet-container {
-    border-radius: 4px;
-  }
-  
-  .leaflet-popup-content {
-    font-family: inherit;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .form-container {
-      margin: 10px;
-      padding: 15px;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      font-size: 16px; /* Évite le zoom sur iOS */
-    }
-  }
-  
-  /* Animation de chargement */
-  .loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* Styles pour les champs requis */
-  .form-group label[for]:after {
-    content: "";
-  }
-  
-  .form-group label:has(+ input[required]):after,
-  .form-group label:has(+ select[required]):after,
-  .form-group label:has(+ textarea[required]):after {
-    content: " *";
-    color: #dc3545;
-  }
-  
-  /* Styles pour la validation */
-  .form-group input.invalid,
-  .form-group select.invalid,
-  .form-group textarea.invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
-  }
-  
-  .form-group input.valid,
-  .form-group select.valid,
-  .form-group textarea.valid {
-    border-color: #28a745;
-    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
-  }
-  
-  .error-message {
-    color: #dc3545;
-    font-size: 14px;
-    margin-top: 5px;
-    display: block;
-  }
-  
-  .success-message {
-    color: #28a745;
-    font-size: 14px;
-    margin-top: 5px;
-    display: block;
-  }
-  
+}
+
+/* Animation de chargement */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #F5F6FA;
+  border-top: 3px solid #8BC34A;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Styles pour les champs requis */
+.form-group label[for]:after {
+  content: "";
+}
+
+.form-group label:has(+ input[required]):after,
+.form-group label:has(+ select[required]):after,
+.form-group label:has(+ textarea[required]):after {
+  content: " *";
+  color: #F7DC6F;
+}
+
+/* Styles pour la validation */
+.form-group input.invalid,
+.form-group select.invalid,
+.form-group textarea.invalid {
+  border-color: #F7DC6F;
+  box-shadow: 0 0 0 2px rgba(247,220,111,0.18);
+}
+
+.form-group input.valid,
+.form-group select.valid,
+.form-group textarea.valid {
+  border-color: #8BC34A;
+  box-shadow: 0 0 0 2px rgba(139,195,74,0.16);
+}
+
+.error-message {
+  color: #F7DC6F;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.success-message {
+  color: #8BC34A;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-slider {
+  background: #8BC34A;
+}
+
+.toggle-slider {
+  background: #F5F6FA;
+  border: 1.5px solid #8BC34A;
+}
+
+.btn-secondary {
+  background-color: #333333;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 30px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #8BC34A;
+  color: #fff;
+}

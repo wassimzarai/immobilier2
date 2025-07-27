@@ -64,6 +64,9 @@ const Home = () => {
     Object.keys(filters).forEach(key => {
       if (filters[key]) activeFilters[key] = filters[key];
     });
+    // Correction : envoyer prixMin/prixMax comme nombres si présents
+    if (activeFilters.prixMin) activeFilters.prixMin = Number(activeFilters.prixMin);
+    if (activeFilters.prixMax) activeFilters.prixMax = Number(activeFilters.prixMax);
     loadAnnonces(activeFilters);
   };
 

@@ -1,6 +1,69 @@
-.annonce-detail-container { max-width: 800px; margin: auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.annonce-detail-header { border-bottom: 2px solid #007bff; padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
-.annonce-detail-header h1 { margin: 0; }
-.annonce-detail-prix { font-size: 1.8rem; font-weight: bold; color: #007bff; }
-.annonce-detail-body p { line-height: 1.7; }
-.annonce-detail-body hr { border: 0; border-top: 1px solid #eee; margin: 2rem 0; }
+.annonce-detail-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,197,142,0.10);
+  font-family: 'Poppins', 'Inter', 'Cairo', 'Tajawal', 'Almarai', sans-serif;
+}
+
+.annonce-detail-header {
+  border-bottom: 2px solid #00C58E;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.annonce-detail-header h1 {
+  margin: 0;
+  color: #2C2C2C;
+  font-weight: 700;
+}
+
+.annonce-detail-prix {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #FFD166;
+}
+
+.annonce-detail-body p {
+  line-height: 1.7;
+  color: #2C2C2C;
+}
+
+.annonce-detail-body hr {
+  border: 0;
+  border-top: 1.5px solid #F5F6FA;
+  margin: 2rem 0;
+}
+
+.annonce-detail-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.annonce-detail-feature {
+  background: #F5F6FA;
+  color: #00C58E;
+  border-radius: 18px;
+  padding: 7px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1.2px solid #00C58E;
+}
+
+@media (max-width: 768px) {
+  .annonce-detail-container {
+    padding: 1rem;
+  }
+  .annonce-detail-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
