@@ -36,16 +36,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Barre de recherche */}
-        <form className="navbar-search" onSubmit={handleSearch}>
-          <input
-            type="text"
-            name="search"
-            placeholder="Rechercher un bien..."
-            autoComplete="off"
-          />
-          <button type="submit">Rechercher</button>
-        </form>
+
 
         {/* Liens centraux */}
         <ul className="nav-menu">
