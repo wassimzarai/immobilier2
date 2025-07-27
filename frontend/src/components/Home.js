@@ -17,8 +17,8 @@ const Home = () => {
     prixMin: '',
     prixMax: ''
   });
+  const [search, setSearch] = useState('');
 
-  const categorieOptions = ['Vente', 'Location', 'Location vacances'];
   const typeBienOptions = ['Appartements', 'Maisons', 'Villas & maisons de luxe', 'Locaux commerciaux', 'Bureaux', 'Terrains', 'Fermes'];
 
   // --- CORRECTION 2 : Utiliser useCallback pour éviter les re-créations de fonction ---
@@ -64,46 +64,89 @@ const Home = () => {
     Object.keys(filters).forEach(key => {
       if (filters[key]) activeFilters[key] = filters[key];
     });
+    if (search.trim() !== '') {
+      activeFilters.search = search.trim();
+    }
     // Correction : envoyer prixMin/prixMax comme nombres si présents
     if (activeFilters.prixMin) activeFilters.prixMin = Number(activeFilters.prixMin);
     if (activeFilters.prixMax) activeFilters.prixMax = Number(activeFilters.prixMax);
     loadAnnonces(activeFilters);
   };
 
-  const resetFilters = () => {
-    setFilters({ categorie: '', typeBien: '', prixMin: '', prixMax: '' });
-    loadAnnonces();
-  };
+
 
   const formatPrice = (price) => new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND' }).format(price);
   const formatDate = (dateString) => new Date(dateString).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <div className="home-container">
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1>Trouvez votre bien immobilier idéal</h1>
-          <p>Découvrez des milliers d'annonces immobilières en Tunisie</p>
-        </div>
-      </section>
-
-      <section className="filters-section">
-        <div className="filters-container">
-          <h2>Rechercher un bien</h2>
-          <div className="filters-grid">
-            <div className="filter-group"><label htmlFor="categorie">Catégorie</label><select id="categorie" name="categorie" value={filters.categorie} onChange={handleFilterChange}><option value="">Toutes</option>{categorieOptions.map(o => <option key={o} value={o}>{o}</option>)}</select></div>
-            <div className="filter-group"><label htmlFor="typeBien">Type de bien</label><select id="typeBien" name="typeBien" value={filters.typeBien} onChange={handleFilterChange}><option value="">Tous</option>{typeBienOptions.map(o => <option key={o} value={o}>{o}</option>)}</select></div>
-            <div className="filter-group"><label htmlFor="prixMin">Prix min (DT)</label><input type="number" id="prixMin" name="prixMin" value={filters.prixMin} onChange={handleFilterChange} placeholder="Ex: 100000" /></div>
-            <div className="filter-group"><label htmlFor="prixMax">Prix max (DT)</label><input type="number" id="prixMax" name="prixMax" value={filters.prixMax} onChange={handleFilterChange} placeholder="Ex: 500000" /></div>
+    <>
+      <div className="home-hero-bg">
+        <div className="home-hero">
+          <h1 className="home-title">Aqarino</h1>
+          <div className="home-slogan-ar">عقارك في متناولك</div>
+          <div className="home-slogan-fr">Votre bien, à portée de clic</div>
+          <div className="home-search-card">
+            <div className="home-search-top">
+              <button
+                className={`search-type-btn${filters.categorie === 'Vente' ? ' active' : ''}`}
+                onClick={() => setFilters(f => ({ ...f, categorie: 'Vente' }))}
+                type="button"
+              >
+                <span style={{marginRight: 6}}>🏠</span>Acheter
+              </button>
+              <button
+                className={`search-type-btn${filters.categorie === 'Location' ? ' active' : ''}`}
+                onClick={() => setFilters(f => ({ ...f, categorie: 'Location' }))}
+                type="button"
+              >
+                Louer
+              </button>
+            </div>
+            <div className="home-search-fields">
+              <input
+                type="text"
+                name="search"
+                placeholder="Ville, quartier, adresse..."
+                className="search-input"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+              <select
+                name="typeBien"
+                value={filters.typeBien}
+                onChange={handleFilterChange}
+                className="search-select"
+              >
+                <option value="">Type de bien</option>
+                {typeBienOptions.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+              <select
+                name="budget"
+                value={filters.budget || ''}
+                onChange={e => setFilters(f => ({ ...f, budget: e.target.value }))}
+                className="search-select"
+              >
+                <option value="">Budget</option>
+                <option value="50000">≤ 50 000 DT</option>
+                <option value="100000">≤ 100 000 DT</option>
+                <option value="200000">≤ 200 000 DT</option>
+                <option value="500000">≤ 500 000 DT</option>
+                <option value="1000000">≤ 1 000 000 DT</option>
+              </select>
+              <button className="search-btn-yellow" onClick={applyFilters} type="button">
+                Rechercher
+              </button>
+            </div>
           </div>
-          <div className="filters-actions">
-            <button onClick={applyFilters} className="btn-primary">Rechercher</button>
-            <button onClick={resetFilters} className="btn-secondary">Réinitialiser</button>
-          </div>
         </div>
-      </section>
+      </div>
 
-      <section className="annonces-section">
+      {/* Section biens en vedette, directement sous le hero */}
+      <section className="featured-properties-section">
+        <div className="featured-header">
+          <h2 className="featured-title">Biens en vedette</h2>
+          <p className="featured-subtitle">Découvrez notre sélection de biens immobiliers exceptionnels en Tunisie</p>
+        </div>
         <div className="annonces-container">
           <div className="section-header">
             <h2>Annonces récentes</h2>
@@ -139,7 +182,107 @@ const Home = () => {
           )}
         </div>
       </section>
-    </div>
+
+      {/* Section Nos services */}
+      <section className="services-section">
+        <h2 className="services-title">Nos services</h2>
+        <p className="services-subtitle">Une plateforme complète pour tous vos besoins immobiliers en Tunisie</p>
+        <div className="services-grid">
+          <div className="service-card">
+            <div className="service-icon">🔍</div>
+            <h3>Recherche avancée</h3>
+            <p>Trouvez le bien parfait grâce à nos filtres intelligents et notre géolocalisation précise.</p>
+          </div>
+          <div className="service-card">
+            <div className="service-icon">🔒</div>
+            <h3>Achat sécurisé</h3>
+            <p>Processus d'achat transparent avec vérification des documents et accompagnement juridique.</p>
+          </div>
+          <div className="service-card">
+            <div className="service-icon">🔑</div>
+            <h3>Location simplifiée</h3>
+            <p>Louez en toute confiance avec nos contrats vérifiés et notre service de médiation.</p>
+          </div>
+          <div className="service-card">
+            <div className="service-icon">🆓</div>
+            <h3>Publication gratuite</h3>
+            <p>Publiez vos annonces gratuitement avec photos illimitées et visibilité maximale.</p>
+          </div>
+          <div className="service-card">
+            <div className="service-icon">💎</div>
+            <h3>Garantie qualité</h3>
+            <p>Tous nos biens sont vérifiés et nos partenaires agences sont certifiés.</p>
+          </div>
+          <div className="service-card">
+            <div className="service-icon">🕑</div>
+            <h3>Support 24/7</h3>
+            <p>Notre équipe vous accompagne à chaque étape de votre projet immobilier.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-stats">
+          <div className="footer-stat">
+            <div className="footer-stat-icon">🏠</div>
+            <div className="footer-stat-value">15,000+</div>
+            <div className="footer-stat-label">Biens disponibles</div>
+          </div>
+          <div className="footer-stat">
+            <div className="footer-stat-icon">👤</div>
+            <div className="footer-stat-value">50,000+</div>
+            <div className="footer-stat-label">Utilisateurs actifs</div>
+          </div>
+          <div className="footer-stat">
+            <div className="footer-stat-icon">📈</div>
+            <div className="footer-stat-value">2,500+</div>
+            <div className="footer-stat-label">Ventes réalisées</div>
+          </div>
+          <div className="footer-stat">
+            <div className="footer-stat-icon">🔑</div>
+            <div className="footer-stat-value">98%</div>
+            <div className="footer-stat-label">Satisfaction client</div>
+          </div>
+        </div>
+        <div className="footer-main">
+          <div className="footer-brand">
+            <div className="footer-logo">Aqarino</div>
+            <div className="footer-desc">La plateforme immobilière de référence en Tunisie. Votre bien, à portée de clic.</div>
+          </div>
+          <div className="footer-links">
+            <div>
+              <h4>Navigation</h4>
+              <ul>
+                <li><a href="/">Acheter</a></li>
+                <li><a href="/">Louer</a></li>
+                <li><a href="/">Publier une annonce</a></li>
+                <li><a href="/">Agence partenaire</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Support</h4>
+              <ul>
+                <li><a href="/">Centre d'aide</a></li>
+                <li><a href="/">Conditions d'utilisation</a></li>
+                <li><a href="/">Politique de confidentialité</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Contact</h4>
+              <ul>
+                <li>+216 70 123 456</li>
+                <li>contact@aqarino.tn</li>
+                <li>Avenue Habib Bourguiba, 1000 Tunis, Tunisie</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          &copy; 2024 Aqarino. Tous droits réservés. | Développé avec &hearts; en Tunisie
+        </div>
+      </footer>
+    </>
   );
 };
 
