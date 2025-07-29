@@ -18,6 +18,7 @@ const AnnonceSchema = new mongoose.Schema(
     prix: { type: Number, required: true, min: 0 },
     description: { type: String, required: true, trim: true, maxlength: 2000 },
     photos: { type: [String], validate: [v => v.length <= 10, 'Limite de 10 photos.'] },
+    videos: { type: [String], validate: [v => v.length <= 3, 'Limite de 3 vidéos.'] },
     auteur: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     estPubliee: { type: Boolean, default: true },
     surfaceConstruite: { type: Number },

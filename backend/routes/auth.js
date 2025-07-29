@@ -12,6 +12,33 @@ const sendActivationEmail = require('../utils/sendActivationEmail');
 
 const router = express.Router();
 
+// --- ROUTE LOGIN UTILISATEUR ---
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ msg: 'Utilisateur non trouvé.' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: 'Mot de passe incorrect.' });
+    // Génération du token JWT
+    const payload = {
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role || 'user'
+      }
+    };
+    const token = require('jsonwebtoken').sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    res.json({ token, user: { id: user._id, nom: user.nom, email: user.email, role: user.role || 'user' } });
+  } catch (e) {
+    res.status(500).json({ msg: 'Erreur serveur : ' + e.message });
+  }
+});
+
 // --- ROUTE 1 : Inscription d'un nouvel utilisateur ---
 router.post('/register', async (req, res) => {
   console.log('-> Requête reçue sur POST /api/auth/register');

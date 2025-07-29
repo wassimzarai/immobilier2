@@ -25,8 +25,9 @@ api.interceptors.request.use(
 
 
 // --- Fonctions pour les annonces ---
-export const createAnnonce = async (annonceData) => {
-  const response = await api.post('/annonces', annonceData);
+export const createAnnonce = async (annonceData, isMultipart = false) => {
+  const config = isMultipart ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+  const response = await api.post('/annonces', annonceData, config);
   return response.data;
 };
 export const getAnnonces = async (filters = {}) => {

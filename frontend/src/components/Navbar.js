@@ -12,11 +12,6 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Ajoute ici ta logique de recherche si besoin
-  };
-
   return (
     <nav className="navbar">
       <div className="navbar-container">

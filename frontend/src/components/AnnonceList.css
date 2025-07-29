@@ -1,97 +1,216 @@
-/* Fichier : frontend/src/components/AnnonceList.css */
+
 .annonce-list-container {
-  padding: 2rem;
   max-width: 1200px;
-  margin: auto;
-  font-family: 'Poppins', 'Inter', 'Cairo', 'Tajawal', 'Almarai', sans-serif;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.annonce-list-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.loading, .error-message {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.loading {
+  color: #666;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: #fdf2f2;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  margin: 20px 0;
 }
 
 .annonces-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  padding: 20px 0;
 }
 
 .annonce-card {
-  border: 1.5px solid #00C58E;
+  background: white;
   border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,197,142,0.10);
-  transition: box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  background: #F5F6FA;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e1e5e9;
 }
 
 .annonce-card:hover {
-  box-shadow: 0 8px 30px rgba(44,44,44,0.16);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.annonce-card-body {
+/* Styles pour Swiper */
+.annonce-media-swiper {
+  width: 100%;
+  height: 250px;
+  position: relative;
+}
+
+.annonce-media-swiper .swiper-slide {
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+}
+
+.annonce-media-swiper .swiper-slide img,
+.annonce-media-swiper .swiper-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Navigation Swiper */
+.annonce-media-swiper .swiper-button-next,
+.annonce-media-swiper .swiper-button-prev {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-top: -17.5px;
+}
+
+.annonce-media-swiper .swiper-button-next:after,
+.annonce-media-swiper .swiper-button-prev:after {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.annonce-media-swiper .swiper-button-next:hover,
+.annonce-media-swiper .swiper-button-prev:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Pagination Swiper */
+.annonce-media-swiper .swiper-pagination {
+  bottom: 10px;
+}
+
+.annonce-media-swiper .swiper-pagination-bullet {
+  background: white;
+  opacity: 0.7;
+  width: 8px;
+  height: 8px;
+}
+
+.annonce-media-swiper .swiper-pagination-bullet-active {
+  background: #007bff;
+  opacity: 1;
+}
+
+/* Corps de la carte */
+.annonce-card-body {
+  padding: 20px;
 }
 
 .annonce-card-categorie {
-  background-color: #00C58E;
-  color: #fff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 12px;
+  border-radius: 20px;
   font-size: 0.85rem;
-  font-weight: bold;
-  align-self: flex-start;
-  margin-bottom: 1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .annonce-card h3 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-size: 1.25rem;
-  color: #2C2C2C;
-  font-weight: 700;
+  margin: 10px 0;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .annonce-card-prix {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #FFD166;
-  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #27ae60;
+  margin: 10px 0;
 }
 
 .annonce-card-description {
-  color: #2C2C2C;
-  flex-grow: 1;
-  margin-bottom: 1.5rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 15px 0;
+  font-size: 0.95rem;
 }
 
 .annonce-card-link {
-  background-color: #00C58E;
+  display: inline-block;
+  background: #007bff;
   color: white;
-  text-align: center;
-  padding: 0.75rem;
-  border-radius: 24px;
+  padding: 10px 20px;
+  border-radius: 8px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background 0.2s, color 0.2s;
-  font-size: 1rem;
-  margin-top: 12px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
 .annonce-card-link:hover {
-  background-color: #FFD166;
-  color: #2C2C2C;
+  background: #0056b3;
+  text-decoration: none;
+  color: white;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
-  .annonce-list-container {
-    padding: 1rem;
-  }
   .annonces-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 10px;
   }
-  .annonce-card {
-    margin: 0 10px;
+  
+  .annonce-list-container {
+    padding: 10px;
+  }
+  
+  .annonce-list-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .annonce-card-body {
+    padding: 15px;
+  }
+  
+  .annonce-media-swiper {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .annonce-list-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .annonce-media-swiper {
+    height: 180px;
+  }
+  
+  .annonce-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .annonce-card-prix {
+    font-size: 1.2rem;
   }
 }

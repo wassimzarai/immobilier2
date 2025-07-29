@@ -8,6 +8,46 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const Annonce = require('../models/Annonce');
 const NodeGeocoder = require('node-geocoder');
+const multer = require('multer');
+const path = require('path');
+
+// Multer config pour photos et vidéos
+const fs = require('fs');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    let uploadPath;
+    if (file.mimetype.startsWith('image/')) {
+      uploadPath = path.join(__dirname, '../uploads/photos');
+    } else if (file.mimetype.startsWith('video/')) {
+      uploadPath = path.join(__dirname, '../uploads/videos');
+    } else {
+      uploadPath = path.join(__dirname, '../uploads');
+    }
+    // Crée le dossier si besoin
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext);
+    cb(null, base + '-' + Date.now() + ext);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // Accepte images et vidéos courantes
+  if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Type de fichier non supporté'), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 1 * 1024 * 1024 * 1024, files: 13 } // 1 Go par fichier, 13 fichiers max
+});
 
 // --- Middleware d'authentification (ADAPTÉ POUR LIRE LE TOKEN IMBRIQUÉ) ---
 const auth = (req, res, next) => {
@@ -79,10 +119,42 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => { try { const annonce = await Annonce.findById(req.params.id).populate('auteur', 'nom email'); if (!annonce) return res.sendStatus(404); res.json(annonce); } catch (e) { res.sendStatus(500); } });
 
 // --- ROUTES PROTÉGÉES ---
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, upload.fields([
+  { name: 'photos', maxCount: 10 },
+  { name: 'videos', maxCount: 3 }
+]), async (req, res) => {
   try {
     if (req.user.role === 'admin') return res.status(403).json({ msg: 'Action non autorisée' });
-    const annonce = new Annonce({ ...req.body, auteur: req.user.id });
+    // On récupère les chemins des fichiers uploadés
+    let photos = [];
+    let videos = [];
+    if (req.files && req.files['photos']) {
+      photos = req.files['photos'].map(f => '/uploads/photos/' + f.filename);
+    }
+    if (req.files && req.files['videos']) {
+      videos = req.files['videos'].map(f => '/uploads/videos/' + f.filename);
+    }
+    // On fusionne avec req.body (qui peut contenir d'autres champs)
+    // Correction : parser emplacement si c'est un string JSON (cas FormData)
+    let emplacement = req.body.emplacement;
+    if (typeof emplacement === 'string') {
+      try {
+        emplacement = JSON.parse(emplacement);
+      } catch (e) {
+        emplacement = {};
+      }
+    }
+    // Si region/ville sont à plat, on les injecte dans l'objet
+    if (req.body.region) emplacement.region = req.body.region;
+    if (req.body.ville) emplacement.ville = req.body.ville;
+    const annonceData = {
+      ...req.body,
+      emplacement,
+      auteur: req.user.id,
+      photos,
+      videos
+    };
+    const annonce = new Annonce(annonceData);
     await annonce.save();
     res.status(201).json(annonce);
   } catch (e) {
