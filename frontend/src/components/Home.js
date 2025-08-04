@@ -6,6 +6,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { getAnnonces } from '../api/annonce';
 import './Home.css';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const Home = () => {
   const [annonces, setAnnonces] = useState([]);
@@ -161,6 +166,56 @@ const Home = () => {
               {annonces.map(annonce => (
                 <div key={annonce._id} className="annonce-card">
                   <div className="annonce-header"><span className="annonce-category">{annonce.categorie}</span><span className="annonce-type">{annonce.typeBien}</span></div>
+                  {/* Affichage Swiper médias (photos + vidéos) */}
+                  {(annonce.photos?.length > 0 || annonce.videos?.length > 0) && (
+                    <div className="annonce-media-swiper">
+                      <Swiper
+                        modules={[Navigation, Pagination]}
+                        navigation
+                        pagination={{ clickable: true }}
+                        spaceBetween={0}
+                        slidesPerView={1}
+                        style={{ borderRadius: 12, height: 260, marginBottom: 12 }}
+                      >
+                        {/* Fusionne photos et vidéos pour l'affichage */}
+                        {[...(annonce.photos || []).map(photoUrl => ({ type: 'photo', url: photoUrl })),
+                          ...(annonce.videos || []).map(videoUrl => ({ type: 'video', url: videoUrl }))].map((media, idx) => {
+                          const getMediaUrl = (mediaPath, type = 'photos') => {
+                            if (!mediaPath) return '';
+                            if (mediaPath.startsWith('http')) return mediaPath;
+                            if (mediaPath.startsWith('/uploads/')) return mediaPath;
+                            return `/uploads/${type}/${mediaPath.replace(/^.*[\\/]/, '')}`;
+                          };
+                          if (media.type === 'photo') {
+                            const imageUrl = getMediaUrl(media.url, 'photos');
+                            return (
+                              <SwiperSlide key={`photo-${idx}`}>
+                                <img
+                                  src={imageUrl}
+                                  alt="Annonce visuel"
+                                  style={{ width: '100%', height: 260, objectFit: 'cover', borderRadius: 12 }}
+                                  onError={e => { e.target.onerror = null; e.target.src = '/no-image.jpg'; }}
+                                />
+                              </SwiperSlide>
+                            );
+                          } else {
+                            const videoSrc = getMediaUrl(media.url, 'videos');
+                            return (
+                              <SwiperSlide key={`video-${idx}`}>
+                                <video
+                                  controls
+                                  style={{ width: '100%', height: 260, objectFit: 'cover', borderRadius: 12 }}
+                                >
+                                  <source src={videoSrc} type="video/mp4" />
+                                  Votre navigateur ne supporte pas la lecture vidéo.
+                                </video>
+                              </SwiperSlide>
+                            );
+                          }
+                        })}
+                      </Swiper>
+                    </div>
+                  )}
                   <div className="annonce-content">
                     <h3 className="annonce-title">{annonce.typeBien} - {annonce.emplacement.ville}</h3>
                     <p className="annonce-location">📍 {annonce.emplacement.adresse}, {annonce.emplacement.ville}</p>

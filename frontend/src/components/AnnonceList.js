@@ -151,51 +151,6 @@ export default AnnonceList;
               {(annonce.photos?.length > 0 || annonce.videos?.length > 0) && (
                 <Swiper
                   modules={[Navigation, Pagination]}
-                  navigation
-                  pagination={{ clickable: true }}
-                  spaceBetween={10}
-                  slidesPerView={1}
-                  className="annonce-media-swiper"
-                >
-                  {/* Affichage des photos */}
-                  {annonce.photos && annonce.photos.map((photoUrl, idx) => {
-                    const imageUrl = getMediaUrl(photoUrl, 'photos');
-                    return (
-                      <SwiperSlide key={`photo-${idx}`}>
-                        <img
-                          src={imageUrl}
-                          alt={`Photo ${idx + 1} de ${annonce.typeBien}`}
-                          style={{ width: '100%', maxHeight: 250, objectFit: 'cover', background: '#eee', borderRadius: 12 }}
-                          onError={e => {
-                            e.target.onerror = null;
-                            e.target.src = `${BASE_URL}/uploads/photos/default.jpg`;
-                          }}
-                        />
-                      </SwiperSlide>
-                    );
-                  })}
-                  {/* Affichage des vidéos */}
-                  {annonce.videos && annonce.videos.map((videoUrl, idx) => {
-                    const videoSrc = getMediaUrl(videoUrl, 'videos');
-                    return (
-                      <SwiperSlide key={`video-${idx}`}>
-                        <video
-                          controls
-                          style={{
-                            width: '100%',
-                            maxHeight: 250,
-                            background: '#000',
-                            borderRadius: 12
-                          }}
-                          onError={() => {
-                            console.error(`Erreur de chargement de la vidéo: ${videoSrc}`);
-                          }}
-                        >
-                          <source src={videoSrc} type="video/mp4" />
-                          <source src={videoSrc} type="video/webm" />
-                          <source src={videoSrc} type="video/ogg" />
-                          Votre navigateur ne supporte pas la lecture vidéo.
-                        </video>
                       </SwiperSlide>
                     );
                   })}
