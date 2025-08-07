@@ -5,7 +5,7 @@
 import axios from 'axios';
 
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = '/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -43,7 +43,10 @@ export const updateAnnonce = async (id, annonceData) => {
   return response.data;
 };
 export const deleteAnnonce = async (id) => {
-  const response = await api.delete(`/annonces/${id}`);
+  const token = localStorage.getItem('token');
+  const response = await api.delete(`/annonces/${id}`, {
+    headers: { 'x-auth-token': token }
+  });
   return response.data;
 };
 

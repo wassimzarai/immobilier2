@@ -48,7 +48,10 @@ const userSchema = new mongoose.Schema({
   // La date et l'heure auxquelles ce code secret expirera.
   resetPasswordExpires: {
     type: Date
-  }
+  },
+
+  // Liste des annonces favorites (array d’ObjectId)
+  favoris: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Annonce' }]
   
   // --- FIN DE L'AJOUT ---
 

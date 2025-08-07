@@ -48,7 +48,12 @@ const AnnonceDetail = () => {
   }, [id]);
 
   if (loading) return <div className="loading-container"><p>Chargement de l'annonce...</p></div>;
-  if (error) return <div className="error-container"><p>{error}</p></div>;
+  if (error) {
+    setTimeout(() => {
+      window.location.href = '/espace-client';
+    }, 2000);
+    return <div className="error-container"><p>{error} <br/>Redirection vers l'espace client...</p></div>;
+  }
   if (!annonce) return <div className="no-results"><p>Aucune annonce à afficher.</p></div>;
 
   return (

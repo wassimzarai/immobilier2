@@ -177,7 +177,7 @@ router.delete('/:id', auth, async (req, res) => {
     const annonce = await Annonce.findById(req.params.id);
     if (!annonce) return res.sendStatus(404);
     if (annonce.auteur.toString() !== req.user.id) return res.status(401).json({ msg: 'Action non autorisée' });
-    await annonce.remove();
+    await Annonce.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Annonce supprimée' });
   } catch (e) {
     res.status(500).json({ msg: e.message });

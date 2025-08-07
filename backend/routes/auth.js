@@ -51,6 +51,17 @@ router.post('/register', async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      return res.status(400).json({ msg: "Un utilisateur avec cet email existe déjà." });
+    }
+
+    const bcrypt = require('bcrypt');
+    const salt = await bcrypt.genSalt(10);
+    const motDePasse = await bcrypt.hash(password, salt);
+
+    const user = new User({ nom, email, motDePasse });
+    await user.save();
+    res.status(201).json({ msg: "Utilisateur enregistré avec succès." });
+    if (existingUser) {
       return res.status(400).json({ msg: "Erreur : Cet e-mail est déjà utilisé." });
     }
 
@@ -108,8 +119,8 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ msg: "Identifiants incorrects." });
+    if (!user.motDePasse) {
+      return res.status(400).json({ msg: 'Aucun mot de passe défini pour cet utilisateur.' });
     }
 
     if (!user.isActive) {

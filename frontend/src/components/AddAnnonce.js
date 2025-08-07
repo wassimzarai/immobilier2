@@ -3,9 +3,9 @@
 // VERSION FINALE AVEC LA STRUCTURE JSX CORRIGÉE
 // =================================================================
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { createAnnonce, getRegions, getVillesByRegion, getRegionDetails } from '../api/annonce';
+import { createAnnonce, getAnnonceById, updateAnnonce, getRegions, getVillesByRegion, getRegionDetails } from '../api/annonce';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -42,6 +42,8 @@ function LocationMarker({ position, onPositionChange }) {
 
 // --- Composant principal du formulaire ---
 const AddAnnonce = () => {
+  const { id } = useParams(); // Si présent, mode édition
+
   const { isLoggedIn, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const isMounted = useRef(true);
@@ -83,6 +85,35 @@ const AddAnnonce = () => {
     }
     return () => { isMounted.current = false; };
   }, [isLoggedIn, isAdmin, authLoading, navigate]);
+
+  // Si mode édition, charger l’annonce à modifier et pré-remplir le formulaire
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      getAnnonceById(id)
+        .then(annonce => {
+          setFormData({
+            ...annonce,
+            emplacement: annonce.emplacement || { region: '', ville: '', adresse: '', coordonnees: { latitude: null, longitude: null } },
+            photos: annonce.photos || [],
+            videos: annonce.videos || [],
+            caracteristiques: annonce.caracteristiques || { jardin: false, terrasse: false, garage: false, ascenseur: false, vueSurMer: false, vueSurMontagnes: false, piscine: false, concierge: false, chambreRangement: false, meuble: false },
+            interieur: annonce.interieur || { salonEuropeen: false, antenneParabolique: false, cheminee: false, climatisation: false, chauffageCentral: false, securite: false, doubleVitrage: false, porteBlindee: false },
+            optionsSupplementaires: annonce.optionsSupplementaires || { cuisineEquipee: false, refrigerateur: false, four: false, machineALaver: false, microOndes: false }
+          });
+          if (annonce.emplacement?.region) {
+            getVillesByRegion(annonce.emplacement.region).then(setVilles);
+          }
+          if (annonce.emplacement?.coordonnees?.latitude && annonce.emplacement?.coordonnees?.longitude) {
+            setMapCenter([annonce.emplacement.coordonnees.latitude, annonce.emplacement.coordonnees.longitude]);
+            setMapZoom(12);
+            setMarkerPos({ lat: annonce.emplacement.coordonnees.latitude, lng: annonce.emplacement.coordonnees.longitude });
+          }
+        })
+        .catch(() => setError("Erreur lors du chargement de l'annonce"))
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
 
   useEffect(() => {
     const fetchRegions = async () => {
@@ -184,16 +215,23 @@ const AddAnnonce = () => {
       fd.append('optionsSupplementaires', JSON.stringify(formData.optionsSupplementaires));
       formData.photos.forEach(photo => fd.append('photos', photo));
       formData.videos.forEach(video => fd.append('videos', video));
-      const nouvelleAnnonce = await createAnnonce(fd, true);
-      if (isMounted.current) {
-        alert('Annonce publiée avec succès !');
-        navigate(`/annonces/${nouvelleAnnonce._id}`);
+      if (id) {
+        await updateAnnonce(id, fd);
+        alert("Annonce modifiée avec succès !");
+        navigate('/espace-client');
+      } else {
+        const nouvelleAnnonce = await createAnnonce(fd, true);
+        if (isMounted.current) {
+          alert('Annonce publiée avec succès !');
+          navigate(`/annonces/${nouvelleAnnonce._id}`);
+        }
       }
     } catch (err) {
       if (isMounted.current) setError(err.response?.data?.msg || err.message || 'Une erreur est survenue.');
     }
     if (isMounted.current) setLoading(false);
   };
+
 
   if (authLoading) return <div>Chargement...</div>;
   if (!isLoggedIn || isAdmin) return <div>Accès non autorisé.</div>;
