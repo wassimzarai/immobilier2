@@ -36,10 +36,7 @@ const Navbar = () => {
         {/* Liens centraux */}
         <ul className="nav-menu">
           <li className="nav-item">
-            <Link to="/annonces?type=vente" className="nav-links">Acheter</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/annonces?type=location" className="nav-links">Louer</Link>
+            <Link to="/annonces?type=vente" className="nav-links">Immobilier Moderne</Link>
           </li>
           <li className="nav-item">
             <Link to="/publier" className="nav-links">Publier</Link>

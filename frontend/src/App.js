@@ -6,17 +6,15 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
-import AddAnnonce from './components/AddAnnonce';
-
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
-import Activate from './components/Activate'; // <-- AJOUT ICI
-
-// --- VÉRIFIER CET IMPORT ---
-import AnnonceDetail from './components/AnnonceDetail'; // Assurez-vous que cette ligne est présente
+import AddAnnonce from './components/AddAnnonce';
+import Activate from './components/Activate';
+import AnnonceDetail from './components/AnnonceDetail';
+import EspaceClient from './pages/EspaceClient';
+import ImmobilierModerne from './pages/ImmobilierModerne';
 
 import './App.css';
-import EspaceClient from './pages/EspaceClient';
 
 const PageLayoutWithNavbar = () => (
   <>
@@ -44,6 +42,8 @@ function App() {
             {/* --- VÉRIFIER CETTE LIGNE --- */}
             {/* C'est la ligne qui connecte l'URL au composant. Elle est essentielle. */}
             <Route path="/annonces/:id" element={<AnnonceDetail />} />
+          <Route path="/immobilier-moderne" element={<ImmobilierModerne />} />
+          <Route path="/annonces" element={<ImmobilierModerne />} />
             <Route path="/espace-client" element={<EspaceClient />} />
           </Route>
                   </Routes>

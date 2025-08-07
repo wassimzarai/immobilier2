@@ -105,11 +105,13 @@ router.get('/regions/:region/details', (req, res) => { try { const d = regionsDa
 // --- FILTRE PRIX MIN/MAX ---
 router.get('/', async (req, res) => {
   try {
-    const { prixMin, prixMax, ...autres } = req.query;
+    const { prixMin, prixMax, categorie, typeBien, ...autres } = req.query;
     let filtre = { estPubliee: true };
     if (prixMin) filtre.prix = { ...filtre.prix, $gte: Number(prixMin) };
     if (prixMax) filtre.prix = { ...filtre.prix, $lte: Number(prixMax) };
-    // On peut ajouter d'autres filtres ici (categorie, typeBien, etc.)
+    if (categorie) filtre.categorie = categorie;
+    if (typeBien) filtre.typeBien = typeBien;
+    // On peut ajouter d'autres filtres ici (ville, etc.)
     const annonces = await Annonce.find(filtre).populate('auteur', 'nom').sort({ createdAt: -1 });
     res.json(annonces);
   } catch (e) {
