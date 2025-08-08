@@ -27,6 +27,19 @@ router.post('/', async (req, res) => {
         contactMessage: contact.message
       });
       await notif.save();
+      // --- Notif temps réel ---
+      const { io } = require('../server');
+      io.to(String(annonce.auteur)).emit('nouvelle_notification', {
+        userId: annonce.auteur,
+        annonceId: annonce._id,
+        type: 'alerte',
+        message: `Vous avez reçu une nouvelle demande de contact pour votre annonce (${annonce.typeBien} à ${annonce.emplacement.ville}).`,
+        nom: contact.nom,
+        email: contact.email,
+        telephone: contact.telephone,
+        contactMessage: contact.message,
+        date: new Date()
+      });
     }
     res.status(201).json(contact);
   } catch (e) {
@@ -41,6 +54,19 @@ router.get('/', async (req, res) => {
     if (!userId) return res.status(400).json({ msg: 'userId requis' });
     const contacts = await Contact.find({ userId }).sort({ date: -1 });
     res.json(contacts);
+  } catch (e) {
+    res.status(500).json({ msg: e.message });
+  }
+});
+
+// Récupérer les notifications de contact pour un utilisateur (annonceur)
+router.get('/notifications', async (req, res) => {
+  try {
+    const userId = req.query.userId || (req.user && req.user._id);
+    if (!userId) return res.status(400).json({ msg: 'userId requis' });
+    const Notification = require('../models/Notification');
+    const notifications = await Notification.find({ userId }).sort({ sentAt: -1 });
+    res.json(notifications);
   } catch (e) {
     res.status(500).json({ msg: e.message });
   }

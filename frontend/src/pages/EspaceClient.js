@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { socket } from '../socket';
 import { useNavigate } from "react-router-dom";
 import { deleteAnnonce } from '../api/annonce';
 // Remplacement Card/Button par HTML natif car composants non trouvés
@@ -67,6 +68,8 @@ export default function EspaceClient() {
   }
 
   const [annonces, setAnnonces] = useState([]);
+const [notifications, setNotifications] = useState([]); // Toujours un tableau
+
   const [tab, setTab] = useState("performance");
   // Etats pour gestion des filtres et tab annonces
   const [annonceTab, setAnnonceTab] = useState("mes");
@@ -177,6 +180,28 @@ export default function EspaceClient() {
     fetch(`${API}/annonces?userId=${user._id}`, { headers: { "x-auth-token": token } })
       .then(r => r.json())
       .then(setAnnonces);
+    // Charger les notifications de contact pour cet utilisateur
+    fetch(`${API}/notifications?userId=${user._id}`, { headers: { 'x-auth-token': token } })
+      .then(r => r.json())
+      .then(data => {
+        console.log("📬 Notifications trouvées :", data.length);
+        if (Array.isArray(data)) setNotifications(data);
+        else if (data && data.notifications && Array.isArray(data.notifications)) setNotifications(data.notifications);
+        else setNotifications([]);
+      })
+      .catch(() => setNotifications([]));
+
+    // --- Intégration Socket.io temps réel ---
+    socket.connect();
+    socket.emit('join', user._id); // rejoindre la room userId côté serveur
+    socket.on('nouvelle_notification', notif => {
+      setNotifications(prev => [notif, ...prev]);
+    });
+    return () => {
+      socket.off('nouvelle_notification');
+      socket.emit('leave', user._id); // optionnel, quitter la room
+      socket.disconnect();
+    };
   }, [user]);
 
   if (!user) return <div className="p-10 text-center">Chargement...</div>;
@@ -277,19 +302,37 @@ export default function EspaceClient() {
               <div style={{overflowX:'auto'}}>
                 <table style={{width:'100%',borderCollapse:'collapse',marginBottom:0}}>
                   <thead>
-                    <tr style={{background:'#00b4d8',color:'#fff'}}>
-                      <th style={{padding:'8px'}}>Date</th>
-                      <th>Annonce</th>
-                      <th>Emplacement</th>
-                      <th>Envoyé</th>
-                      <th>Ouvert</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td colSpan="5" style={{textAlign:'center',padding:'16px',color:'#888'}}>Aucune donnée trouvée avec des critères donnés</td>
-                    </tr>
-                  </tbody>
+  <tr style={{background:'#00b4d8',color:'#fff'}}>
+    <th style={{padding:'8px'}}>Date</th>
+    <th>Nom</th>
+    <th>Email</th>
+    <th>Téléphone</th>
+    <th>Message</th>
+    <th>Annonce</th>
+  </tr>
+</thead>
+<tbody>
+  {Array.isArray(notifications) && notifications.length > 0 ? (
+    notifications.map((notif) => (
+      <tr key={notif._id}>
+        <td>{notif.sentAt ? new Date(notif.sentAt).toLocaleString() : '-'}</td>
+        <td>{notif.nom || '-'}</td>
+        <td>{notif.email || '-'}</td>
+        <td>{notif.telephone || '-'}</td>
+        <td>{notif.contactMessage || notif.message || '-'}</td>
+        <td>{notif.annonceId || '-'}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="6" style={{ textAlign: 'center', padding: '16px', color: '#888' }}>
+        Aucune notification trouvée.
+      </td>
+    </tr>
+  )}
+</tbody>
+
+
                 </table>
                 <div style={{fontSize:'0.85em',color:'#888',textAlign:'center',marginTop:6}}>0 - 0 de 0 résultats | 1 - 1 pages</div>
               </div>

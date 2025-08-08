@@ -35,18 +35,14 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/annonces/ajouter" element={<AddAnnonce />} />
-<Route path="/annonces/ajouter/:id" element={<AddAnnonce />} />
-            
+            <Route path="/annonces/ajouter/:id" element={<AddAnnonce />} />
             <Route path="/activate" element={<Activate />} />
-
-            {/* --- VÉRIFIER CETTE LIGNE --- */}
-            {/* C'est la ligne qui connecte l'URL au composant. Elle est essentielle. */}
             <Route path="/annonces/:id" element={<AnnonceDetail />} />
-          <Route path="/immobilier-moderne" element={<ImmobilierModerne />} />
-          <Route path="/annonces" element={<ImmobilierModerne />} />
+            <Route path="/immobilier-moderne" element={<ImmobilierModerne />} />
+            <Route path="/annonces" element={<ImmobilierModerne />} />
             <Route path="/espace-client" element={<EspaceClient />} />
           </Route>
-                  </Routes>
+        </Routes>
       </Router>
     </AuthProvider>
   );

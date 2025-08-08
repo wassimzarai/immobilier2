@@ -38,12 +38,12 @@ const Navbar = () => {
           <li className="nav-item">
             <Link to="/annonces?type=vente" className="nav-links">Immobilier Moderne</Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link to="/publier" className="nav-links">Publier</Link>
           </li>
           <li className="nav-item">
             <Link to="/contact" className="nav-links">Contact</Link>
-          </li>
+          </li> */}
         </ul>
 
         {/* Actions à droite */}

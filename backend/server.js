@@ -24,6 +24,38 @@ const favorisRoutes = require('./routes/favorisRoutes'); // ✅ Ajouté ici
 // --- 2. Initialisation de l'application ---
 const app = express();
 
+// === Socket.IO pour notifications temps réel ===
+const http = require('http');
+const { Server } = require('socket.io');
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*', // 🔒 À restreindre pour la prod
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-auth-token'],
+  }
+});
+
+// Pour usage dans d'autres modules
+module.exports.io = io;
+
+// Gestion des connexions clients
+io.on('connection', (socket) => {
+  console.log('🟢 Un client connecté à Socket.IO :', socket.id);
+
+  // Le frontend doit envoyer son userId après connexion
+  socket.on('register_user', (userId) => {
+    if (userId) {
+      socket.join(String(userId));
+      console.log(`👤 Socket ${socket.id} rejoint la room userId=${userId}`);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔴 Client déconnecté de Socket.IO :', socket.id);
+  });
+});
+
 // --- 3. Middlewares globaux ---
 // ✅ Configuration CORS recommandée
 app.use(cors({
@@ -60,8 +92,8 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ Connecté à MongoDB avec succès !");
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-      console.log(`🚀 Serveur démarré et à l'écoute sur http://localhost:${PORT}`);
+    server.listen(PORT, () => {
+      console.log(`🚀 Serveur (Socket.IO) démarré sur http://localhost:${PORT}`);
     });
   })
   .catch(err => {

@@ -54,29 +54,19 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ msg: "Un utilisateur avec cet email existe déjà." });
     }
 
-    const bcrypt = require('bcrypt');
-    const salt = await bcrypt.genSalt(10);
-    const motDePasse = await bcrypt.hash(password, salt);
-
-    const user = new User({ nom, email, motDePasse });
-    await user.save();
-    res.status(201).json({ msg: "Utilisateur enregistré avec succès." });
-    if (existingUser) {
-      return res.status(400).json({ msg: "Erreur : Cet e-mail est déjà utilisé." });
-    }
-
+    // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
     const activationCode = crypto.randomBytes(4).toString('hex').toUpperCase();
     console.log(`Code d'activation généré pour ${email} : ${activationCode}`);
 
-    const newUser = new User({
+    const user = new User({
       nom,
       email,
       password: hashedPassword,
       activationCode,
       isActive: false
     });
-    await newUser.save();
+    await user.save();
 
     await sendActivationEmail(email, `Votre code d'activation est : ${activationCode}`);
     console.log(`E-mail d'activation envoyé (ou tentative) à ${email}`);
