@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import './Navbar.css';
 
 const Navbar = () => {
-  const { logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -55,6 +55,12 @@ const Navbar = () => {
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{marginRight:6}}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9.001 9.001 0 0112 15c2.042 0 3.923.684 5.379 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
             Espace Client
           </Link>
+          {isAdmin && (
+            <Link to="/admin-dashboard" className="nav-links-button" style={{background:'#a00',color:'#fff',marginLeft:8,padding:'8px 18px',borderRadius:6,fontWeight:'bold',display:'inline-flex',alignItems:'center'}}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{marginRight:6}}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 13h2v-2H3v2zm4 0h2v-2H7v2zm4 0h2v-2h-2v2zm4 0h2v-2h-2v2zm-8 4h2v-2H7v2zm4 0h2v-2h-2v2zm4 0h2v-2h-2v2z" /></svg>
+              Dashboard Admin
+            </Link>
+          )}
           <button onClick={handleLogout} className="nav-links-logout nav-btn-logout">
             Déconnexion
           </button>

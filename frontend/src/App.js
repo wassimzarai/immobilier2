@@ -13,6 +13,7 @@ import Activate from './components/Activate';
 import AnnonceDetail from './components/AnnonceDetail';
 import EspaceClient from './pages/EspaceClient';
 import ImmobilierModerne from './pages/ImmobilierModerne';
+import DashboardAdmin from './pages/DashboardAdmin';
 
 import './App.css';
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/immobilier-moderne" element={<ImmobilierModerne />} />
             <Route path="/annonces" element={<ImmobilierModerne />} />
             <Route path="/espace-client" element={<EspaceClient />} />
+            <Route path="/admin-dashboard" element={<DashboardAdmin />} />
           </Route>
         </Routes>
       </Router>

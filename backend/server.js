@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 app.use(cors({
   origin: '*', // 🔒 À adapter plus tard pour spécifier ton frontend (ex: http://localhost:3000)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'x-auth-token'],
+  allowedHeaders: ['Content-Type', 'x-auth-token', 'authorization'],
 }));
 
 app.use(express.json());
@@ -73,6 +73,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
   res.send('✅ Serveur API Immobilier opérationnel');
 });
+
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes); // 🛡️ Routes admin dashboard
 
 app.use('/api/auth', authRoutes);               // Authentification
 app.use('/api/annonces', annonceRoutes);        // Annonces

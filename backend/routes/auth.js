@@ -117,19 +117,21 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ msg: "Votre compte n'est pas encore activé." });
     }
 
-    const userRole = (user.email === process.env.ADMIN_EMAIL) ? 'admin' : 'user';
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: 'Mot de passe incorrect.' });
 
     // On crée le payload avec la structure { user: { ... } } que le reste de l'appli attend.
     const payload = {
       user: {
         id: user._id,
         nom: user.nom,
-        role: userRole
+        email: user.email,
+        role: user.role || 'user'
       }
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
-    console.log(`Token créé pour ${user.email} avec le rôle ${userRole}.`);
+    console.log(`Token créé pour ${user.email} avec le rôle ${user.role || 'user'}.`);
 
     res.status(200).json({
       token,
@@ -137,7 +139,7 @@ router.post('/login', async (req, res) => {
         id: user._id,
         nom: user.nom,
         email: user.email,
-        role: userRole
+        role: user.role || 'user'
       }
     });
 

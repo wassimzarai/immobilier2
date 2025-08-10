@@ -18,7 +18,8 @@ const authFunction = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    // On s'assure que req.user = payload user (et pas tout le token)
+    req.user = decoded.user || decoded;
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token invalide.' });

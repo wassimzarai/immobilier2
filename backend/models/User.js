@@ -51,7 +51,15 @@ const userSchema = new mongoose.Schema({
   },
 
   // Liste des annonces favorites (array d’ObjectId)
-  favoris: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Annonce' }]
+  favoris: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Annonce' }],
+
+  // Rôle de l'utilisateur (user ou admin)
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+    required: true
+  }
   
   // --- FIN DE L'AJOUT ---
 
@@ -63,4 +71,18 @@ const userSchema = new mongoose.Schema({
 
 // On exporte le modèle pour pouvoir l'utiliser dans d'autres fichiers (comme auth.js).
 // Mongoose créera une collection nommée "users" (au pluriel et en minuscules) dans MongoDB.
+const bcrypt = require('bcrypt');
+
+// Hash du mot de passe avant sauvegarde (création ou modification)
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = mongoose.model('User', userSchema);
